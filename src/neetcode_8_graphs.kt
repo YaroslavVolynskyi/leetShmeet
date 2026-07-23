@@ -117,14 +117,40 @@ fun main() {
 //        )
 //    )
 
-
+    println(
+        minCostConnectPoints(arrayOf(
+            intArrayOf(0,0),intArrayOf(2,2),intArrayOf(3,3),intArrayOf(2,4),intArrayOf(4,2)
+        ))
+    )
 }
 
 /**
  * https://neetcode.io/problems/min-cost-to-connect-points/question?list=neetcode150
  */
 fun minCostConnectPoints(points: Array<IntArray>): Int {
+    val queue = PriorityQueue<Pair<Int, Int>>(compareBy { it.first }) // distance to index
+    queue.add(0 to 0)
+    val visitedIndexes = hashSetOf<Int>()
+    var totalDistance = 0
+    while(visitedIndexes.size != points.size && queue.isNotEmpty()) {
+        val (distance, index) = queue.poll()
+        if (index in visitedIndexes) {
+            continue
+        }
+        visitedIndexes.add(index)
+        totalDistance += distance
+        for (i in points.indices) {
+            if (i !in visitedIndexes) {
+                queue.add(distance(points[index], points[i]) to i)
+            }
+        }
+    }
 
+    return totalDistance
+}
+
+private fun distance(point1: IntArray, point2: IntArray): Int {
+    return Math.abs(point2[0] - point1[0]) + Math.abs(point2[1] - point1[1])
 }
 
 /**
@@ -190,17 +216,6 @@ fun swimInWater(grid: Array<IntArray>): Int {
         }
     }
     return 0
-}
-
-fun nextInWater(i: Int, j: Int, grid: Array<IntArray>, path: MutableSet<Int>) {
-    if (i == grid.size && j == grid[i].size) {
-
-    }
-    for ((dirI, dirJ) in listOf(0 to 1, 0 to -1, 1 to 0, -1 to 0)) {
-        val nextI = dirI + i
-        val nextJ = dirJ + j
-
-    }
 }
 
 /**
