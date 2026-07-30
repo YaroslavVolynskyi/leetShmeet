@@ -4,23 +4,30 @@ fun main() {
 //        charArrayOf('S', 'F', 'C', 'S'),
 //        charArrayOf('A', 'K', 'A', 'E')
 //    )
+//    val board = arrayOf(
+//        charArrayOf('K', 'A', 'E', 'E'),
+//        charArrayOf('S', 'F', 'S', 'E'),
+//        charArrayOf('S', 'E', 'A', 'K')
+//    )
+//    var exist = exist(board, "SEAK")
+//    for (i in 0 .. exist.size - 1) {
+//        val visited = Array(board.size) {
+//                i -> BooleanArray(board[i].size) { false }
+//        }
+//        val coord = exist[i]
+//        coord.coordinates.forEach {
+//            visited[it.first][it.second] = true
+//        }
+//        printArray(board, -1, -1, visited)
+//    }
+//    println(exist)
+
     val board = arrayOf(
-        charArrayOf('K', 'A', 'E', 'E'),
-        charArrayOf('S', 'F', 'S', 'E'),
-        charArrayOf('S', 'E', 'A', 'K')
+        charArrayOf('A','B','C','E'),
+        charArrayOf('S','F','C','S'),
+        charArrayOf('A','D','E','E')
     )
-    var exist = exist(board, "SEAK")
-    for (i in 0 .. exist.size - 1) {
-        val visited = Array(board.size) {
-                i -> BooleanArray(board[i].size) { false }
-        }
-        val coord = exist[i]
-        coord.coordinates.forEach {
-            visited[it.first][it.second] = true
-        }
-        printArray(board, -1, -1, visited)
-    }
-    println(exist)
+    println(exist2(board, "ABC"))
 }
 
 fun exist(board: Array<CharArray>, word: String): List<Coordinates> {
@@ -73,7 +80,44 @@ data class Coordinates(val coordinates: MutableList<Pair<Int, Int>>)
 
 
 
+fun exist2(board: Array<CharArray>, word: String): Boolean {
+    val visited = Array(board.size) { i ->
+        BooleanArray(board[i].size) { false }
+    }
 
+    for (i in board.indices) {
+        for (j in board[i].indices) {
+            if (track2(board, visited, word, 0, i, j)) {
+                return true
+            }
+        }
+    }
+
+    return false
+}
+
+fun track2(board: Array<CharArray>, visited: Array<BooleanArray>, word: String, currentIndex: Int, i: Int, j: Int): Boolean {
+    if (i < 0 || i >= board.size || j < 0 || j >= board[i].size) {
+        return false
+    }
+    if (visited[i][j]) {
+        return false
+    }
+    if (board[i][j] != word[currentIndex]) {
+        return false
+    }
+    if (currentIndex == word.length - 1) {
+        return true
+    }
+
+    visited[i][j] = true
+    var isFound = false
+    for ((directionI, directionJ) in listOf(0 to 1, 0 to -1, 1 to 0, -1 to 0)) {
+        isFound = isFound || track2(board, visited, word, currentIndex + 1, i + directionI, j + directionJ)
+    }
+    visited[i][j] = false
+    return isFound
+}
 
 
 

@@ -69,17 +69,46 @@ fun main() {
 
     val root3 = TreeNode(1)
 
-    val ser = serialize(root2)
-    println(ser)
-    var des = deserialize(ser)
-    println(preorderTree(des).contentToString())
+//    val ser = serialize(root2)
+//    println(ser)
+//    var des = deserialize(ser)
+//    println(preorderTree(des).contentToString())
+
+    println(maxPathSum(root2))
 }
+
+/**
+ * https://neetcode.io/problems/binary-tree-maximum-path-sum/question?list=neetcode150
+ */
+fun maxPathSum(root: TreeNode?): Int {
+    var globalMax = Int.MIN_VALUE
+    fun maxDown(node: TreeNode?): Int {
+        if (node == null) {
+            return 0
+        }
+        val maxLeft = maxDown(node.left)
+        val maxRight = maxDown(node.right)
+        globalMax = Math.max(globalMax, node.`val` + maxLeft + maxRight)
+        return Math.max(0, node.`val` + Math.max(maxLeft, maxRight))
+    }
+    maxDown(root)
+
+    return globalMax
+}
+
+//fun maxDown(node: TreeNode?): Int {
+//    if (node == null) {
+//        return 0
+//    }
+//    val maxLeft = maxDown(node.left)
+//    val maxRight = maxDown(node.right)
+//    return Math.max(0, node.`val` + Math.max(maxLeft, maxRight))
+//}
 
 /**
  * https://neetcode.io/problems/serialize-and-deserialize-binary-tree/question?list=neetcode150
  *
  */
-
 fun serialize(root: TreeNode?): String {
     val res = mutableListOf<String>()
 

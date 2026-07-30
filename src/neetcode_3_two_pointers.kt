@@ -7,11 +7,11 @@ fun main() {
 //    println(isPalindrome("Was it a car or a cat I saw"))
 //    val res = threeSum2(intArrayOf(-1,-1,0,1,2,-1,-1,-4))
 //    println(res.toString())
-//    println(maxArea(intArrayOf(1,7,2,5,24,7,3,6)))
+    println(maxArea(intArrayOf(1,7,2,5,24,7,3,6)))
 //    println(trap(intArrayOf(0,2,0,3,1,0,1,3,2,1)))
 //    println(trap(intArrayOf(0,0,0,3,1,0,1,3,2,1)))
 //    println(trap(intArrayOf(0,1,0,2,1,0,1,3,2,1,2,1)))
-    println(trap(intArrayOf(0,1,0,2,1,0, 0,0,0,0,0,0)))
+//    println(trap(intArrayOf(0,1,0,2,1,0, 0,0,0,0,0,0)))
 }
 
 /**
