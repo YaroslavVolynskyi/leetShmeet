@@ -117,11 +117,43 @@ fun main() {
 //        )
 //    )
 
-    println(
-        minCostConnectPoints(arrayOf(
-            intArrayOf(0,0),intArrayOf(2,2),intArrayOf(3,3),intArrayOf(2,4),intArrayOf(4,2)
-        ))
-    )
+//    println(
+//        minCostConnectPoints(arrayOf(
+//            intArrayOf(0,0),intArrayOf(2,2),intArrayOf(3,3),intArrayOf(2,4),intArrayOf(4,2)
+//        ))
+//    )
+
+    println(canReach("bob", "alice"))
+}
+
+fun canReach(name1: String, name2: String): Boolean {
+    val listOfPairs = listOf<Pair<String, String>>("bob" to "john", "john" to "sam", "john" to "sam2", "sam" to "alice")
+    val map = mutableMapOf<String, MutableList<String>>()
+    listOfPairs.forEach { (name1, name2) ->
+        map.getOrPut(name1) { mutableListOf() }.add(name2)
+    }
+
+    return canReach(name1, name2, mutableSetOf(), map)
+}
+
+fun canReach(name1: String, name2: String, visited: MutableSet<String>, adjacencyMap: Map<String, List<String>>): Boolean {
+    val queue = ArrayDeque<String>()
+    queue.add(name1)
+    while (queue.isNotEmpty()) {
+        repeat(queue.size) {
+            val currentName = queue.removeFirst()
+            if (currentName == name2) {
+                return true
+            }
+            visited.add(currentName)
+            adjacencyMap[currentName]?.forEach { neighbor ->
+                if (neighbor !in visited) {
+                    queue.add(neighbor)
+                }
+            }
+        }
+    }
+    return false
 }
 
 /**
