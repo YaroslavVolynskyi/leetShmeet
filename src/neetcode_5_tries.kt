@@ -26,14 +26,21 @@ fun main() {
 //    wordDictionary.search(".ay") // return true
 //    wordDictionary.search("b..") // return true
 
-    val board = arrayOf(
-        charArrayOf('a','b','c','d'),
-        charArrayOf('s','a','a','t'),
-        charArrayOf('a','c','k','e'),
-        charArrayOf('a','c','d','n')
-    )
-    val words = arrayOf("bat","cat","back","backend","stack")
-    findWords(board, words).forEach { println(it) }
+//    val board = arrayOf(
+//        charArrayOf('a','b','c','d'),
+//        charArrayOf('s','a','a','t'),
+//        charArrayOf('a','c','k','e'),
+//        charArrayOf('a','c','d','n')
+//    )
+//    val words = arrayOf("bat","cat","back","backend","stack")
+//    findWords(board, words).forEach { println(it) }
+
+
+    val tree = PrefixTree()
+    tree.insert("apple")
+    tree.insert("aperol")
+    val a = tree.find("apple")
+    println()
 }
 
 /**

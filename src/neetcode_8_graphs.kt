@@ -91,10 +91,11 @@ fun main() {
 //        countComponents2(n = 5, edges = arrayOf(intArrayOf(0, 1), intArrayOf(1,2),intArrayOf(3,4)))
 //    )
 
-//    val res = findItinerary(
+    val res = findItinerary(
 //        listOf(listOf("BUF","HOU"),listOf("HOU","SEA"),listOf("JFK","BUF"))
-//    )
-//    res.forEach { print(it) }
+        listOf(listOf("HOU","JFK"), listOf("SEA","JFK"), listOf("JFK","SEA"), listOf("JFK","HOU"))
+    )
+    res.forEach { println(it) }
 
 //    println(
 //        swimInWater(arrayOf(
@@ -123,7 +124,7 @@ fun main() {
 //        ))
 //    )
 
-    println(canReach("bob", "alice"))
+//    println(canReach("bob", "alice"))
 }
 
 fun canReach(name1: String, name2: String): Boolean {

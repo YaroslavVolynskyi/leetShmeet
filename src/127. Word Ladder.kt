@@ -2,8 +2,8 @@ package wordledder
 
 fun main() {
     println(
-//        ladderLength(beginWord = "hit", endWord = "cog", wordList = listOf("hot","dot","dog","lot","log","cog"))
-        ladderLength(beginWord = "hot", endWord = "dog", wordList = listOf("hot","dog"))
+        ladderLength(beginWord = "hit", endWord = "cog", wordList = listOf("hot","dot","dog","lot","log","cog"))
+//        ladderLength(beginWord = "hot", endWord = "dog", wordList = listOf("hot","dog"))
     )
 }
 

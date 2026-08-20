@@ -16,6 +16,63 @@ fun foreignDictionary(words: Array<String>): String {
     for (i in 0 .. words.size - 2) {
         val word1 = words[i]
         val word2 = words[i + 1]
+        var wordCounter = 0
+
+        while (wordCounter < word1.length
+            && wordCounter < word2.length
+            && word1[wordCounter] == word2[wordCounter]
+        ) {
+            wordCounter++
+        }
+        if (wordCounter < word1.length && wordCounter < word2.length) {
+            adjacencyMap[word1[wordCounter]]?.add(word2[wordCounter])
+        } else if (word1.length > word2.length) {
+            return ""
+        }
+    }
+
+    val indegreeMap = mutableMapOf<Char, Int>()
+    adjacencyMap.keys.forEach { indegreeMap[it] = 0 }
+    adjacencyMap.forEach { letter, neigbors ->
+        neigbors.forEach { neighbor ->
+            indegreeMap[neighbor] = indegreeMap[neighbor]!! + 1
+        }
+    }
+    val queue = ArrayDeque<Char>()
+    val order = StringBuilder()
+    indegreeMap.forEach { letter, indegree ->
+        if (indegree == 0) {
+            queue.add(letter)
+        }
+    }
+    while (queue.isNotEmpty()) {
+        val letter = queue.removeFirst()
+        order.append(letter)
+        adjacencyMap[letter]?.forEach { neighbor ->
+            indegreeMap[neighbor] = indegreeMap[neighbor]!! - 1
+            if (indegreeMap[neighbor] == 0) {
+                queue.addLast(neighbor)
+            }
+        }
+    }
+
+    return if (order.length == adjacencyMap.size) {
+        order.toString()
+    } else {
+        ""
+    }
+}
+
+fun foreignDictionary0(words: Array<String>): String {
+    val adjacencyMap = mutableMapOf<Char, MutableSet<Char>>()
+    words.forEach { word ->
+        word.forEach { letter ->
+            adjacencyMap[letter] = mutableSetOf()
+        }
+    }
+    for (i in 0 .. words.size - 2) {
+        val word1 = words[i]
+        val word2 = words[i + 1]
         var counter = 0
         while (counter < word1.length
             && counter < word2.length
