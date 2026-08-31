@@ -1,5 +1,6 @@
 package practice
 
+import java.awt.Image
 import java.util.PriorityQueue
 
 fun main() {
@@ -24,15 +25,172 @@ fun main() {
 //    )
 
 
-    val q = PriorityQueue<Int>(compareByDescending { it })
-    q.add(34)
-    q.add(11)
-    q.add(89)
-    while (q.isNotEmpty()) {
-        println(q.poll())
-    }
+//    val q = PriorityQueue<Int>(compareByDescending { it })
+//    q.add(34)
+//    q.add(11)
+//    q.add(89)
+//    while (q.isNotEmpty()) {
+//        println(q.poll())
+//    }
+
+    val image = arrayOf(
+        intArrayOf(0, 0, 0, 0, 0, 0, 0),
+        intArrayOf(0, 1, 1, 1, 1, 0, 0),
+        intArrayOf(1, 0, 0, 0, 0, 1, 0),
+        intArrayOf(0, 1, 1, 1, 0, 1, 0),
+        intArrayOf(0, 0, 0, 0, 1, 1, 0),
+        intArrayOf(0, 0, 0, 0, 0, 0, 0),
+    )
+    val shoreline = shoreline(image, 1 to 1)
+    val borders = borders(image, 1 to 1)
+//    val lakes = lakes(image, shoreline)
+
+//    println(lakes)
+
+    println(
+        isInsideBorders(1, 5, borders, image)
+    )
+    println(
+        isInsideBorders(2, 4, borders, image)
+    )
+    println(
+        isInsideBorders(2, 6, borders, image)
+    )
+
+    val lakes = lakes(image, borders)
+    println(lakes)
+
 
     println()
+}
+
+private fun isInsideBorders(i: Int, j: Int, borders: Set<Pair<Int, Int>>, image: Array<IntArray>): Boolean {
+    if (i to j in borders) {
+        return true
+    }
+    val iRow = borders.filter { it.first == i }.sortedBy { it.second }
+    val jCol = borders.filter { it.second == j }.sortedBy { it.first }
+    if (iRow.isEmpty() || jCol.isEmpty()) {
+        return false
+    }
+    return j in iRow.first().second .. iRow.last().second
+            && i in jCol.first().first .. jCol.last().first
+}
+
+fun lakes(image: Array<IntArray>, borders: Set<Pair<Int, Int>>): Int {
+    var lakesCount = 0
+    val visited = hashSetOf<Pair<Int, Int>>()
+    val directions = listOf(0 to 1, 0 to -1, -1 to 0, 1 to 0)
+    for (i in image.indices) {
+        for (j in image[i].indices) {
+            if (i to j in visited) {
+                continue
+            }
+            visited.add(i to j)
+            if (image[i][j] == 1) {
+                continue
+            }
+            var isLake = isInsideBorders(i, j, borders, image)
+//            if (!isInsideBorders(i, j, borders, image)) {
+//                continue
+//            }
+            // from below means we're in a lake
+            val queue = ArrayDeque<Pair<Int, Int>>()
+            queue.add(i to j)
+            while (queue.isNotEmpty()) {
+                val current = queue.removeFirst()
+                for ((dirI, dirJ) in directions) {
+                    val nextI = current.first + dirI
+                    val nextJ = current.second + dirJ
+                    if (nextI !in image.indices || nextJ !in image[nextI].indices) {
+                        isLake = false
+                        continue
+                    }
+                    if (nextI to nextJ in visited) {
+                        continue
+                    }
+                    visited.add(nextI to nextJ)
+                    if (image[nextI][nextJ] == 0) {
+                        if (!isInsideBorders(nextI, nextJ, borders, image)) {
+                            isLake = false
+                        }
+                        queue.add(nextI to nextJ)
+                    }
+                }
+            }
+            if (isLake) {
+                lakesCount++
+            }
+        }
+    }
+
+    return lakesCount
+}
+
+fun shoreline(image: Array<IntArray>, start: Pair<Int, Int>): Set<Pair<Int, Int>> {
+    if (image[start.first][start.second] == 0) {
+        return hashSetOf()
+    }
+    val directions = listOf(0 to 1, 0 to -1, 1 to 0, -1 to 0, -1 to -1, 1 to 1, 1 to -1, -1 to 1)
+    val shoreline = hashSetOf<Pair<Int, Int>>()
+    val visited = hashSetOf<Pair<Int, Int>>()
+    var queue = ArrayDeque<Pair<Int, Int>>()
+    queue.add(start.first to start.second)
+    while (queue.isNotEmpty()) {
+        val current = queue.removeFirst()
+        if (current in visited) {
+            continue
+        }
+        visited.add(current)
+        for ((dirI, dirJ) in directions) {
+            val nextI = current.first + dirI
+            val nextJ = current.second + dirJ
+            if (nextI in image.indices && nextJ in image[nextI].indices) {
+                if (image[nextI][nextJ] == 1) {
+                    queue.add(nextI to nextJ)
+                } else {
+                    shoreline.add(nextI to nextJ)
+//                    image[nextI][nextJ] = 9
+                }
+            }
+        }
+    }
+
+    return shoreline
+}
+
+fun borders(image: Array<IntArray>, start: Pair<Int, Int>): Set<Pair<Int, Int>> {
+    if (image[start.first][start.second] == 0) {
+        return hashSetOf()
+    }
+    val directions = listOf(0 to 1, 0 to -1, 1 to 0, -1 to 0, -1 to -1, 1 to 1, 1 to -1, -1 to 1)
+    val shoreline = hashSetOf<Pair<Int, Int>>()
+    val borders = hashSetOf<Pair<Int, Int>>()
+    val visited = hashSetOf<Pair<Int, Int>>()
+    var queue = ArrayDeque<Pair<Int, Int>>()
+    queue.add(start.first to start.second)
+    while (queue.isNotEmpty()) {
+        val current = queue.removeFirst()
+        if (current in visited) {
+            continue
+        }
+        visited.add(current)
+        for ((dirI, dirJ) in directions) {
+            val nextI = current.first + dirI
+            val nextJ = current.second + dirJ
+            if (nextI in image.indices && nextJ in image[nextI].indices) {
+                if (image[nextI][nextJ] == 1) {
+                    queue.add(nextI to nextJ)
+                    borders.add(nextI to nextJ)
+                } else {
+                    shoreline.add(nextI to nextJ)
+//                    image[nextI][nextJ] = 9
+                }
+            }
+        }
+    }
+
+    return borders
 }
 
 fun orangesRotting(grid: Array<IntArray>): Int {
