@@ -4,12 +4,12 @@ import java.awt.Image
 import java.util.PriorityQueue
 
 fun main() {
-    val node1 = Node(1)
-    val node2 = Node(2)
-    val node3 = Node(3)
-    node1.neighbors = arrayListOf(node2)
-    node2.neighbors = arrayListOf(node1, node3)
-    node3.neighbors = arrayListOf(node2)
+//    val node1 = Node(1)
+//    val node2 = Node(2)
+//    val node3 = Node(3)
+//    node1.neighbors = arrayListOf(node2)
+//    node2.neighbors = arrayListOf(node1, node3)
+//    node3.neighbors = arrayListOf(node2)
 
 //    val cloned = clone(node1)
 //    val cloned2 = cloneBfs(node1)
@@ -33,36 +33,71 @@ fun main() {
 //        println(q.poll())
 //    }
 
-    val image = arrayOf(
-        intArrayOf(0, 0, 0, 0, 0, 0, 0),
-        intArrayOf(0, 1, 1, 1, 1, 0, 0),
-        intArrayOf(1, 0, 0, 0, 0, 1, 0),
-        intArrayOf(0, 1, 1, 1, 0, 1, 0),
-        intArrayOf(0, 0, 0, 0, 1, 1, 0),
-        intArrayOf(0, 0, 0, 0, 0, 0, 0),
-    )
-    val shoreline = shoreline(image, 1 to 1)
-    val borders = borders(image, 1 to 1)
+//    val image = arrayOf(
+//        intArrayOf(0, 0, 0, 0, 0, 0, 0),
+//        intArrayOf(0, 1, 1, 1, 1, 0, 0),
+//        intArrayOf(1, 0, 0, 0, 0, 1, 0),
+//        intArrayOf(0, 1, 1, 1, 0, 1, 0),
+//        intArrayOf(0, 0, 0, 0, 1, 1, 0),
+//        intArrayOf(0, 0, 0, 0, 0, 0, 0),
+//    )
+//    val shoreline = shoreline(image, 1 to 1)
+//    val borders = borders(image, 1 to 1)
 //    val lakes = lakes(image, shoreline)
 
 //    println(lakes)
 
-    println(
-        isInsideBorders(1, 5, borders, image)
-    )
-    println(
-        isInsideBorders(2, 4, borders, image)
-    )
-    println(
-        isInsideBorders(2, 6, borders, image)
-    )
+//    println(
+//        isInsideBorders(1, 5, borders, image)
+//    )
+//    println(
+//        isInsideBorders(2, 4, borders, image)
+//    )
+//    println(
+//        isInsideBorders(2, 6, borders, image)
+//    )
+//
+//    val lakes = lakes(image, borders)
+//    println(lakes)
+//
+//
 
-    val lakes = lakes(image, borders)
-    println(lakes)
-
+    val root = TreeNode(5).apply {
+        left = TreeNode(3).apply {
+            left = TreeNode(1).apply {
+                right = TreeNode(2)
+            }
+            right = TreeNode(4)
+        }
+        right = TreeNode(8).apply {
+            left = TreeNode(7)
+            right = TreeNode(9)
+        }
+    }
+    val res = lowestCommonAncestor(root, root?.left?.left?.right, root?.left?.left)
 
     println()
 }
+
+// https://neetcode.io/problems/lowest-common-ancestor-in-binary-search-tree/solution
+fun lowestCommonAncestor(root: TreeNode?, p: TreeNode?, q: TreeNode?): TreeNode? {
+    if (root == null || p == null || q == null) {
+        return null
+    }
+    if (root.`val` > p.`val` && root.`val` > q.`val`) {
+        return lowestCommonAncestor(root.left, p, q)
+    } else if (root.`val` < p.`val` && root.`val` < q.`val`) {
+        return lowestCommonAncestor(root.right, p, q)
+    } else {
+        return root
+    }
+}
+
+class TreeNode(var `val`: Int) {
+    var left: TreeNode? = null
+    var right: TreeNode? = null
+}
+
 
 private fun isInsideBorders(i: Int, j: Int, borders: Set<Pair<Int, Int>>, image: Array<IntArray>): Boolean {
     if (i to j in borders) {
@@ -73,8 +108,8 @@ private fun isInsideBorders(i: Int, j: Int, borders: Set<Pair<Int, Int>>, image:
     if (iRow.isEmpty() || jCol.isEmpty()) {
         return false
     }
-    return j in iRow.first().second .. iRow.last().second
-            && i in jCol.first().first .. jCol.last().first
+    return j in iRow.first().second..iRow.last().second
+            && i in jCol.first().first..jCol.last().first
 }
 
 fun lakes(image: Array<IntArray>, borders: Set<Pair<Int, Int>>): Int {
@@ -219,7 +254,7 @@ fun orangesRotting(grid: Array<IntArray>): Int {
                 if (nextI in grid.indices
                     && nextJ in grid[i].indices
                     && grid[nextI][nextJ] == 1
-                    ) {
+                ) {
                     freshOranges--
                     grid[nextI][nextJ] = 2
                     queue.addLast(nextI to nextJ)
@@ -240,7 +275,7 @@ fun cloneBfs(node: Node?): Node? {
     val queue = ArrayDeque<Node>()
     queue.add(node)
     clonedMap[node] = Node(node.`val`)
-    while(queue.isNotEmpty()) {
+    while (queue.isNotEmpty()) {
         val currentNode = queue.removeFirst()
         val cloned = clonedMap[currentNode]!!
         currentNode.neighbors.forEach { neighbor ->
