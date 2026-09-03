@@ -62,22 +62,60 @@ fun main() {
 //
 //
 
-    val root = TreeNode(5).apply {
-        left = TreeNode(3).apply {
-            left = TreeNode(1).apply {
-                right = TreeNode(2)
-            }
-            right = TreeNode(4)
-        }
-        right = TreeNode(8).apply {
-            left = TreeNode(7)
-            right = TreeNode(9)
-        }
-    }
-    val res = lowestCommonAncestor(root, root?.left?.left?.right, root?.left?.left)
+//    val root = TreeNode(5).apply {
+//        left = TreeNode(3).apply {
+//            left = TreeNode(1).apply {
+//                right = TreeNode(2)
+//            }
+//            right = TreeNode(4)
+//        }
+//        right = TreeNode(8).apply {
+//            left = TreeNode(7)
+//            right = TreeNode(9)
+//        }
+//    }
+//    val res = lowestCommonAncestor(root, root?.left?.left?.right, root?.left?.left)
 
     println()
+
+    val listOfPairs = listOf("bob" to "john", "john" to "sam", "john" to "sam2", "sam" to "alice")
+    println(
+        canConnect("bob", "alice", listOfPairs)
+    )
 }
+
+fun canConnect(name1: String, name2: String, list: List<Pair<String, String>>): Boolean {
+    val map = mutableMapOf<String, String>()
+    val set = mutableSetOf<String>()
+    list.forEach { pair ->
+        set.add(pair.first)
+        set.add(pair.second)
+    }
+    set.forEach { name ->
+        map[name] = name
+    }
+    list.forEach { pair ->
+        val parent1 = findParent(map, pair.first)
+        val parent2 = findParent(map, pair.second)
+        if (parent1 != null && parent2 != null && parent1 != parent2) {
+            map[parent2] = parent1
+        }
+    }
+
+    return findParent(map, name1) == findParent(map, name2)
+}
+
+private fun findParent(map: MutableMap<String, String>, name: String): String? {
+    map.getOrPut(name) { name }
+    var current = name
+    while(current != map[current]) {
+        map[current] = map[map[current]]!!
+        current = map[current]!!
+    }
+    return current
+}
+
+
 
 // https://neetcode.io/problems/lowest-common-ancestor-in-binary-search-tree/solution
 fun lowestCommonAncestor(root: TreeNode?, p: TreeNode?, q: TreeNode?): TreeNode? {

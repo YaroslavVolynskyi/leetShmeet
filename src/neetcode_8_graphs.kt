@@ -91,11 +91,11 @@ fun main() {
 //        countComponents2(n = 5, edges = arrayOf(intArrayOf(0, 1), intArrayOf(1,2),intArrayOf(3,4)))
 //    )
 
-    val res = findItinerary(
-//        listOf(listOf("BUF","HOU"),listOf("HOU","SEA"),listOf("JFK","BUF"))
-        listOf(listOf("HOU","JFK"), listOf("SEA","JFK"), listOf("JFK","SEA"), listOf("JFK","HOU"))
-    )
-    res.forEach { println(it) }
+//    val res = findItinerary(
+////        listOf(listOf("BUF","HOU"),listOf("HOU","SEA"),listOf("JFK","BUF"))
+//        listOf(listOf("HOU","JFK"), listOf("SEA","JFK"), listOf("JFK","SEA"), listOf("JFK","HOU"))
+//    )
+//    res.forEach { println(it) }
 
 //    println(
 //        swimInWater(arrayOf(
