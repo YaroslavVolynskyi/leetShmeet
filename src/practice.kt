@@ -80,11 +80,65 @@ fun main() {
 
     val listOfPairs = listOf("bob" to "john", "john" to "sam", "john" to "sam2", "sam" to "alice")
     println(
-        canConnect("bob", "alice", listOfPairs)
+//        canConnectDSU("bob", "alice", listOfPairs)
+        //canConnectBFS("bob", "alice", listOfPairs)
+        canConnectDFS("bob", "alice", listOfPairs)
     )
 }
 
-fun canConnect(name1: String, name2: String, list: List<Pair<String, String>>): Boolean {
+fun canConnectDFS(name1: String, name2: String, list: List<Pair<String, String>>): Boolean {
+    val map = mutableMapOf<String, MutableList<String>>()
+    list.forEach { pair ->
+        map.getOrPut(pair.first) { mutableListOf() }.add(pair.second)
+        map.getOrPut(pair.second) { mutableListOf() }.add(pair.first)
+    }
+    val visited = mutableSetOf<String>()
+    return dfs(name1, name2, map, visited)
+}
+
+private fun dfs(currentName: String, name2: String, map: Map<String, List<String>>, visited: MutableSet<String>): Boolean {
+    if (currentName == name2) {
+        return true
+    }
+    visited.add(currentName)
+    map[currentName]?.forEach { neighbor ->
+        if (neighbor !in visited) {
+            if (dfs(neighbor, name2, map, visited)) {
+                return true
+            }
+        }
+    }
+    return false
+}
+
+fun canConnectBFS(name1: String, name2: String, list: List<Pair<String, String>>): Boolean {
+    val map = mutableMapOf<String, MutableList<String>>()
+    list.forEach { pair ->
+        map.getOrPut(pair.first) { mutableListOf() }.add(pair.second)
+        map.getOrPut(pair.second) { mutableListOf() }.add(pair.first)
+    }
+    val queue = ArrayDeque<String>()
+    queue.add(name1)
+    val visited = mutableSetOf<String>()
+    while (queue.isNotEmpty()) {
+        val name = queue.removeFirst()
+        if (name == name2) {
+            return true
+        }
+        if (name in visited) {
+            continue
+        }
+        visited.add(name)
+        map[name]?.forEach { neighbor ->
+            if (neighbor !in visited) {
+                queue.add(neighbor)
+            }
+        }
+    }
+    return false
+}
+
+fun canConnectDSU(name1: String, name2: String, list: List<Pair<String, String>>): Boolean {
     val map = mutableMapOf<String, String>()
     val set = mutableSetOf<String>()
     list.forEach { pair ->
