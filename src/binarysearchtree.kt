@@ -25,11 +25,13 @@ fun main() {
 
     root.apply {
         insert(5)
-        insert(7)
-        insert(9)
+        insert(3)
         insert(6)
+        insert(2)
+        insert(4)
+        insert(7)
     }
-    val r = root.delete(7)
+    val r = root.delete(3)
     println()
 }
 
